@@ -4716,13 +4716,27 @@ svg [data-node-id], svg [data-edge-from], svg [data-detail], svg [data-detail-an
            data-preset-badge-editorial="EDITORIAL / FIELD NOTE">
         <div class="pulse-dot"></div>
         <h1>ShuroqX Platform Architecture</h1>
-        <label class="arch-switch no-print" for="arch-switch">
-          <span>Architecture</span>
-          <select id="arch-switch" aria-label="Choose an architecture diagram">
-            <option value="logical">Logical architecture</option>
-            <option value="production">Production &#183; deployment perspective</option>
-          </select>
-        </label>
+        <div class="arch-switch no-print">
+          <span class="arch-switch-heading">Architecture</span>
+          <button id="arch-switch" type="button"
+                  aria-haspopup="menu"
+                  aria-expanded="false"
+                  aria-controls="arch-switch-menu"
+                  title="Choose an architecture diagram">
+            <span id="arch-switch-label">Logical architecture</span>
+            <span class="arch-switch-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="arch-switch-menu" id="arch-switch-menu" role="menu" aria-label="Choose an architecture diagram">
+            <button class="arch-switch-option" data-arch-value="logical" type="button" role="menuitemradio" aria-checked="true" tabindex="-1">
+              <span class="arch-switch-option-copy"><strong>Logical architecture</strong><small>Components and data flow</small></span>
+              <span class="arch-switch-option-check" aria-hidden="true"></span>
+            </button>
+            <button class="arch-switch-option" data-arch-value="production" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
+              <span class="arch-switch-option-copy"><strong>Production</strong><small>Deployment perspective</small></span>
+              <span class="arch-switch-option-check" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -5274,39 +5288,102 @@ svg [data-node-id], svg [data-edge-from], svg [data-detail], svg [data-detail-an
   </div>
 
   <style>.arch-switch {
+position: relative;
 display: inline-flex;
 align-items: center;
-gap: 0.5rem;
+gap: 0.45rem;
 margin-left: auto;
-padding: 0.4rem 0.7rem;
-border: 1px solid #cbd5e1;
+padding: 0.3rem 0.42rem 0.3rem 0.75rem;
+border: 1px solid var(--panel-border);
 border-radius: 999px;
-background: #ffffff;
+background: var(--panel);
+color: var(--text);
 font-size: 0.78rem;
-color: #0f172a;
 white-space: nowrap;
+transition: border-color 0.15s;
 }
-.arch-switch span {
+.arch-switch-heading {
 font-size: 0.64rem;
 font-weight: 700;
 letter-spacing: 0.06em;
 text-transform: uppercase;
 color: #0891b2;
 }
-.arch-switch select {
-font: inherit;
-font-size: 0.78rem;
+.arch-switch #arch-switch {
+display: inline-flex;
+align-items: center;
+gap: 0.45rem;
+padding: 0.32rem 0.7rem;
 border: 0;
+border-radius: 999px;
 background: transparent;
 color: inherit;
-outline: none;
+font: inherit;
+font-weight: 600;
 cursor: pointer;
-max-width: none;
-padding-right: 0.1rem;
-text-overflow: clip;
 }
 .arch-switch:hover,
-.arch-switch:focus-within { border-color: #0891b2; }
+.arch-switch:focus-within { border-color: color-mix(in srgb, #0891b2 45%, var(--panel-border)); }
+.arch-switch:hover #arch-switch,
+.arch-switch:focus-within #arch-switch { background: color-mix(in srgb, #0891b2 7%, transparent); }
+.arch-switch.open { border-color: #0891b2; }
+.arch-switch-chevron {
+width: 0.7rem;
+height: 0.7rem;
+flex: 0 0 auto;
+background: #0891b2;
+-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='m3 4.5 3 3 3-3' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='m3 4.5 3 3 3-3' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.arch-switch.open .arch-switch-chevron { transform: rotate(180deg); }
+.arch-switch-menu {
+position: absolute;
+top: calc(100% + 0.4rem);
+right: 0;
+display: none;
+width: 16.5rem;
+max-width: calc(100vw - 2rem);
+padding: 0.45rem;
+border: 1px solid var(--toolbar-border);
+border-radius: 0.875rem;
+background: var(--toolbar-menu-bg);
+box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+text-align: left;
+z-index: 80;
+}
+.arch-switch-menu.open { display: block; animation: toolbar-menu-in 0.16s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.arch-switch-option {
+display: grid;
+grid-template-columns: minmax(0, 1fr) 1rem;
+align-items: center;
+gap: 0.6rem;
+width: 100%;
+min-height: 2.6rem;
+padding: 0.45rem 0.62rem;
+border: 0;
+border-radius: 0.5rem;
+background: transparent;
+color: var(--toolbar-text);
+text-align: left;
+cursor: pointer;
+font: inherit;
+}
+.arch-switch-option:hover,
+.arch-switch-option:focus-visible { background: var(--toolbar-hover); }
+.arch-switch-option[aria-checked="true"] { background: color-mix(in srgb, #0891b2 9%, transparent); }
+.arch-switch-option-copy strong { display: block; font-size: 0.78rem; color: var(--toolbar-text); }
+.arch-switch-option-copy small { display: block; margin-top: 0.1rem; color: var(--text-faint); font-size: 0.62rem; }
+.arch-switch-option-check {
+width: 0.85rem;
+height: 0.85rem;
+flex: 0 0 auto;
+display: none;
+background: #0891b2;
+-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M4 10.5 8.2 15 16 6' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M4 10.5 8.2 15 16 6' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.arch-switch-option[aria-checked="true"] .arch-switch-option-check { display: block; }
 @media print { .arch-switch { display: none !important; } }</style>
 
   <script type="text/plain" id="sqx-diagram-production">
@@ -5584,14 +5661,95 @@ return v === 'production' ? 'production' : 'logical';
 } catch (e) { return 'logical'; }
 }
 var current = mode();
-var select = document.getElementById('arch-switch');
-if (select) {
-select.value = current;
-select.addEventListener('change', function () {
-var v = select.value === 'production' ? '?diagram=production' : '';
-location.href = location.pathname + v + location.hash;
-});
+function gotoDiagram(v) {
+location.href = location.pathname + (v === 'production' ? '?diagram=production' : '') + location.hash;
 }
+/* App-style dropdown for the architecture switch: mirrors the toolbar preset
+   menu behaviour (save for applying without navigation). Radiogroup rows mark
+   the live diagram; choosing one re-enters the page with ?diagram=. */
+window.Archify = window.Archify || {};
+Archify.archSwitch = (function () {
+  var root = document.querySelector('.arch-switch');
+  var btn = document.getElementById('arch-switch');
+  var menu = document.getElementById('arch-switch-menu');
+  var label = document.getElementById('arch-switch-label');
+  if (!root || !btn || !menu) return null;
+  var options = [].slice.call(menu.querySelectorAll('[data-arch-value]'));
+  function apply(v) {
+    options.forEach(function (o) {
+      o.setAttribute('aria-checked', String(o.getAttribute('data-arch-value') === v));
+    });
+    if (label) label.textContent = v === 'production' ? 'Production' : 'Logical architecture';
+    btn.setAttribute('data-arch-option', v);
+  }
+  function isOpen() { return menu.classList.contains('open'); }
+  function open(focusLast) {
+    if (document.documentElement.getAttribute('data-embed') === 'true') return false;
+    if (Archify.exportMenu && Archify.exportMenu.isOpen()) Archify.exportMenu.close(false);
+    if (Archify.preset && Archify.preset.isOpen()) Archify.preset.close(false);
+    menu.classList.add('open');
+    root.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    var checked = options.filter(function (o) { return o.getAttribute('aria-checked') === 'true'; })[0];
+    var target = focusLast ? options[options.length - 1] : (checked || options[0]);
+    if (target) target.focus();
+    return true;
+  }
+  function close(focusTrigger) {
+    menu.classList.remove('open');
+    root.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    if (focusTrigger) btn.focus();
+    return false;
+  }
+  apply(current);
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (isOpen()) close(false);
+    else open(false);
+  });
+  btn.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!isOpen()) open(e.key === 'ArrowUp');
+    }
+  });
+  document.addEventListener('click', function (e) {
+    if (!root.contains(e.target) && e.target !== btn) close(false);
+  });
+  menu.addEventListener('click', function (e) {
+    var option = e.target.closest('[data-arch-value]');
+    if (!option || !menu.contains(option)) return;
+    var v = option.getAttribute('data-arch-value');
+    apply(v);
+    close(true);
+    gotoDiagram(v);
+  });
+  menu.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { e.preventDefault(); close(true); return; }
+    if (e.key === 'Tab') { close(false); return; }
+    var active = options.indexOf(document.activeElement);
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        if (options.length) options[(active + 1 + options.length) % options.length].focus();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        if (options.length) options[(active - 1 + options.length) % options.length].focus();
+        break;
+      case 'Home':
+        e.preventDefault();
+        if (options[0]) options[0].focus();
+        break;
+      case 'End':
+        e.preventDefault();
+        if (options.length) options[options.length - 1].focus();
+        break;
+    }
+  });
+  return { open: open, close: close, isOpen: isOpen, apply: apply };
+})();
 if (current !== 'production') return;
 var store = document.getElementById('sqx-diagram-production');
 var svg = document.querySelector('.diagram-container > svg');
